@@ -24,7 +24,7 @@
 
 
 <style name="barra" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-
+    <item name="android:textColor">@color/colorFondoElemento</item>
 </style>
     <style name="estiloActionpersonalizado" >
         <item name="android:textColor">@color/colorFondoElemento</item>

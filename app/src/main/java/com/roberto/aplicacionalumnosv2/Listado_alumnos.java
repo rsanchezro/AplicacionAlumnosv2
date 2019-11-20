@@ -76,6 +76,15 @@ public class Listado_alumnos extends AppCompatActivity {
     public void onBackPressed() {
 
         //Salir del modo action mode si estoy en el
+        if(actionModeactivado)
+        {
+            Log.i("Salir","Salir");
+            salir_actionmode();
+        }
+        else
+        {
+            super.onBackPressed();
+        }
 
 
     }
@@ -85,7 +94,7 @@ public class Listado_alumnos extends AppCompatActivity {
         alumnosseleccionados.clear();
         actionModeactivado=false;
         //Limpio el menu y restablezco los estilos
-        barra.setBackgroundResource(R.color.colorPrimaryDark);
+        barra.setBackgroundResource(R.color.colorPrimary);
         barra.setTitleTextAppearance(this,R.style.barra);
         barra.setTitle(Titulo);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -123,7 +132,10 @@ public class Listado_alumnos extends AppCompatActivity {
             rellenarLista_alumnos(arrayalumnos);
         }
         vista_listaalumnos.setLayoutManager(new LinearLayoutManager(this));
+        //Añadir divisor
+
         adaptadorAlumnos= new Adaptador_alumnos(this,R.layout.alumno_layout,this.datos_listaalumnos);
+
         adaptadorAlumnos.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
