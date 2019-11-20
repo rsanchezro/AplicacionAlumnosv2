@@ -23,10 +23,12 @@ public class Adaptador_alumnos extends RecyclerView.Adapter<Adaptador_alumnos.Mi
     private int recursoLayout;
     private View.OnClickListener onClick;
     private View.OnLongClickListener onLongClick;
-    private int colorFondo;
 
 
-    public Adaptador_alumnos(Listado_alumnos c,int rlayout, ArrayList<Alumno> d)
+
+
+
+    public Adaptador_alumnos(Listado_alumnos c, int rlayout, ArrayList<Alumno> d)
     {
         this.ctx=c;
         this.datos=d;
@@ -63,7 +65,8 @@ public class Adaptador_alumnos extends RecyclerView.Adapter<Adaptador_alumnos.Mi
         //Establezco los escuchadores a la vista
         v.setOnClickListener(this.onClick);
         v.setOnLongClickListener(this.onLongClick);
-        v.setBackgroundResource(colorFondo);
+
+
 
         //Retorno una instancia de miholder
         return new Miholder(v);
@@ -79,6 +82,14 @@ public class Adaptador_alumnos extends RecyclerView.Adapter<Adaptador_alumnos.Mi
         holder.matricula.setText(holder.alumno.getNummatricula()+"");
         holder.nombre.setText(holder.alumno.getNombre());
         holder.foto.setImageResource(holder.alumno.getFoto());
+        holder.vista.setBackgroundResource(R.color.colorFondoElemento);
+        //Cambio el color de fondo en funcion de si el elemento esta seleccionado o
+
+        if(this.ctx.actionModeactivado) {
+            if (this.ctx.alumnosseleccionados.contains(holder.alumno)) {
+                holder.vista.setBackgroundResource(R.color.colorFondoElementoSeleccionado);
+            }
+        }
 
     }
 

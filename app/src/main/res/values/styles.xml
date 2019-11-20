@@ -1,24 +1,34 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-    <style name="miestilo" parent="AppTheme">
-        <item name="actionModeStyle">@style/estiloActionpersonalizado</item>
-        <item name="actionModeBackground">@color/colorPrimaryDark</item>
+    <style name="ListadoTema" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+    </style>
+    <style name="temamenu" parent="Theme.AppCompat.Light.NoActionBar">
+
+
+        <item name="colorPrimary">@color/fondomenuaction</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="toolbarStyle">@style/estiloActionpersonalizado</item>
 
     </style>
 
-    <style name="estiloActionpersonalizado" parent="Widget.AppCompat.ActionMode">
-        <item name="titleTextStyle">@style/otroestilo</item>
 
-    </style>
+<style name="barra" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
 
-    <style name="otroestilo">
-        <item name="android:textSize">14sp</item>
+</style>
+    <style name="estiloActionpersonalizado" >
+        <item name="android:textColor">@color/colorFondoElemento</item>
+        <item name="android:textSize">13sp</item>
+
     </style>
 </resources>

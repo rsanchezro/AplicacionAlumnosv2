@@ -5,4 +5,5 @@
     <color name="colorAccent">#D81B60</color>
     <color name="colorFondoElemento">#FFFFFF</color>
     <color name="colorFondoElementoSeleccionado">@android:color/darker_gray</color>
+    <color name="fondomenuaction">@android:color/black</color>
 </resources>

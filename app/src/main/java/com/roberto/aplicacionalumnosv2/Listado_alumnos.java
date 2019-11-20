@@ -1,6 +1,7 @@
 package com.roberto.aplicacionalumnosv2;
 
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ActionMode;
@@ -10,7 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,6 +32,8 @@ public class Listado_alumnos extends AppCompatActivity {
      ArrayList<Alumno> alumnosseleccionados=new ArrayList<>();
      //Adaptador que introduce los datos en la vista
     Adaptador_alumnos adaptadorAlumnos;
+    String Titulo;
+
     //Variable para controlar si el ActionMode esta activad
     public boolean actionModeactivado=false;
     @Override
@@ -37,7 +42,9 @@ public class Listado_alumnos extends AppCompatActivity {
         setContentView(R.layout.activity_listado_alumnos);
         barra=findViewById(R.id.toolbar);
         String curso=getIntent().getStringExtra("curso");
-        barra.setTitle(new String("LISTADO ALUMNOS "+curso));
+         Titulo="LISTADO ALUMNOS "+curso;
+        barra.setTitle(Titulo);
+
         setSupportActionBar(barra);
 
 
@@ -48,8 +55,46 @@ public class Listado_alumnos extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.item_delete:
+                //
+                break;
+            case R.id.item_edit:
+                //
+                break;
+            case android.R.id.home:
+                //Salir del modo action mode
+                salir_actionmode();
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        //Salir del modo action mode si estoy en el
 
 
+    }
+
+    private void salir_actionmode()
+    {
+        alumnosseleccionados.clear();
+        actionModeactivado=false;
+        //Limpio el menu y restablezco los estilos
+        barra.setBackgroundResource(R.color.colorPrimaryDark);
+        barra.setTitleTextAppearance(this,R.style.barra);
+        barra.setTitle(Titulo);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        barra.getMenu().clear();
+
+
+        //notificar de los cambios en el adapatador
+        adaptadorAlumnos.notifyDataSetChanged();
+    }
 
     private void preparar_ReciclerView(String curso) {
 
@@ -82,11 +127,29 @@ public class Listado_alumnos extends AppCompatActivity {
         adaptadorAlumnos.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                actionModeactivado=true;
-                //Inflo el menu
-                Menu m=null;
-                barra.inflateMenu(R.menu.menu_action_mode);
+                //En el click largo no voy a permitir seleccionar elementos salvo la primera vez
+                int posicion = vista_listaalumnos.getChildAdapterPosition(v);
+                if(!actionModeactivado)
+                {//Solo inflo el menu si no esta el actionmodeactivado
+                    actionModeactivado = true;
+                    barra.inflateMenu(R.menu.menu_action_mode);
+                    //Cambio el estilo de la barra
+                    barra.setBackgroundColor(Color.BLACK);
+                    barra.setTitleTextAppearance(Listado_alumnos.this,R.style.estiloActionpersonalizado);
 
+                    //Seleccionar el elemento sobre el que se ha pulsado
+
+                    seleccionar_Elemento(posicion);
+                    //Actualizco el numero de elementos seleccionados
+                    //Repinto el elemento
+                    adaptadorAlumnos.notifyItemChanged(posicion);
+                    //Incluir icono de flecha hacia atras
+                    if (getSupportActionBar() != null) {
+                        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_white_24dp);
+                        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                    }
+                    actualizar_barra();
+                }
                 return true;
             }
         });
@@ -99,26 +162,32 @@ public class Listado_alumnos extends AppCompatActivity {
                 int posicion=vista_listaalumnos.getChildAdapterPosition(v);
                 if(actionModeactivado)
                 {
-                    //Compruebo si el elemento esta seleccionado
-                    if(alumnosseleccionados.contains(datos_listaalumnos.get(posicion)))
-                    {
-                        alumnosseleccionados.remove(datos_listaalumnos.get(posicion));
-                        //Cambio el color de fondo de la vista
-                        v.setBackgroundResource(R.color.colorFondoElemento);
-
-                    }
-                    else
-                    {
-                        alumnosseleccionados.add(datos_listaalumnos.get(posicion));
-                        v.setBackgroundResource(R.color.colorFondoElementoSeleccionado);
-                    }
+                   seleccionar_Elemento(posicion);
                     adaptadorAlumnos.notifyItemChanged(posicion);
+                    actualizar_barra();
                 }
             }
         });
         vista_listaalumnos.setAdapter(adaptadorAlumnos);
 
 
+    }
+
+private void actualizar_barra()
+{
+    barra.getMenu().getItem(0).setVisible(alumnosseleccionados.size()>1?false:true);
+    barra.setTitle(alumnosseleccionados.size()+" Alumnos seleccionados...");
+}
+    private void seleccionar_Elemento(int posicion)
+    {
+        if(alumnosseleccionados.contains(datos_listaalumnos.get(posicion)))
+        {
+            alumnosseleccionados.remove(datos_listaalumnos.get(posicion));
+        }
+        else
+        {
+            alumnosseleccionados.add(datos_listaalumnos.get(posicion));
+        }
     }
 
 
