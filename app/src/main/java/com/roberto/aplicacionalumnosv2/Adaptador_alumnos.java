@@ -1,6 +1,7 @@
 package com.roberto.aplicacionalumnosv2;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,16 +19,22 @@ import java.util.ArrayList;
 
 public class Adaptador_alumnos extends RecyclerView.Adapter<Adaptador_alumnos.Miholder> {
     private ArrayList<Alumno> datos;
-    private Context ctx;
+    private Listado_alumnos ctx;
     private int recursoLayout;
     private View.OnClickListener onClick;
     private View.OnLongClickListener onLongClick;
-    public Adaptador_alumnos(Context c,int rlayout, ArrayList<Alumno> d)
+    private int colorFondo;
+
+
+    public Adaptador_alumnos(Listado_alumnos c,int rlayout, ArrayList<Alumno> d)
     {
         this.ctx=c;
         this.datos=d;
         this.recursoLayout=rlayout;
+
     }
+
+
 
     public void setOnClickListener(View.OnClickListener click)
     {
@@ -47,6 +54,7 @@ public class Adaptador_alumnos extends RecyclerView.Adapter<Adaptador_alumnos.Mi
         View v=null;
         try {
           v = ((AppCompatActivity)ctx).getLayoutInflater().inflate(this.recursoLayout, parent, false);
+
         }
         catch (Exception e)
         {
@@ -55,6 +63,8 @@ public class Adaptador_alumnos extends RecyclerView.Adapter<Adaptador_alumnos.Mi
         //Establezco los escuchadores a la vista
         v.setOnClickListener(this.onClick);
         v.setOnLongClickListener(this.onLongClick);
+        v.setBackgroundResource(colorFondo);
+
         //Retorno una instancia de miholder
         return new Miholder(v);
     }
@@ -66,21 +76,10 @@ public class Adaptador_alumnos extends RecyclerView.Adapter<Adaptador_alumnos.Mi
         //Vinculo los datos del alumno que voy a tratar
         holder.alumno=this.datos.get(position);
         //Asocio los datos de los elementos visuales
-
-            holder.matricula.setText(holder.alumno.getNummatricula()+"");
-
-
-
+        holder.matricula.setText(holder.alumno.getNummatricula()+"");
         holder.nombre.setText(holder.alumno.getNombre());
+        holder.foto.setImageResource(holder.alumno.getFoto());
 
-        //Si quisiera capturar los eventos sobre los datos de un alumno
-     holder.vista.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              Toast.makeText(ctx,"HAS SELECCIONADO EL ALUMNO: "+ holder.alumno.getNombre(),Toast.LENGTH_SHORT).show();
-
-          }
-      });
     }
 
     @Override
@@ -104,5 +103,6 @@ public class Adaptador_alumnos extends RecyclerView.Adapter<Adaptador_alumnos.Mi
 
 
         }
+
     }
 }

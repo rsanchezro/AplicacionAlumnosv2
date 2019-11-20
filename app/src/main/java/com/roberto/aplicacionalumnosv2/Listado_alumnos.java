@@ -12,6 +12,7 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class Listado_alumnos extends AppCompatActivity {
      //Adaptador que introduce los datos en la vista
     Adaptador_alumnos adaptadorAlumnos;
     //Variable para controlar si el ActionMode esta activad
-    private boolean actionModeactivado=false;
+    public boolean actionModeactivado=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,22 +66,35 @@ public class Listado_alumnos extends AppCompatActivity {
         {
             rellenarLista_alumnos(arrayalumnos);
         }
+        vista_listaalumnos.setLayoutManager(new LinearLayoutManager(this));
         adaptadorAlumnos= new Adaptador_alumnos(this,R.layout.alumno_layout,this.datos_listaalumnos);
-        vista_listaalumnos.setAdapter(adaptadorAlumnos);
-       //Establezco los escuchadores para el adaptador
         adaptadorAlumnos.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
+                //Para conocer en que elemento se ha hecho click
+                //El objeto View representa un elemento de la lista
+                int posicion=vista_listaalumnos.getChildAdapterPosition(v);
                 if(actionModeactivado)
                 {
-                    //Compruebo si el elemento esta en la lista de seleccionados
-                    
+                    //Compruebo si el elemento esta seleccionado
+                    if(alumnosseleccionados.contains(datos_listaalumnos.get(posicion)))
+                    {
+                        alumnosseleccionados.remove(datos_listaalumnos.get(posicion));
+                        //Cambio el color de fondo de la vista
+                        v.setBackgroundResource(R.color.colorFondoElemento);
+
+                    }
+                    else
+                    {
+                        alumnosseleccionados.add(datos_listaalumnos.get(posicion));
+                        v.setBackgroundResource(R.color.colorFondoElementoSeleccionado);
+                    }
+                    adaptadorAlumnos.notifyItemChanged(posicion);
                 }
-
-
             }
         });
+        vista_listaalumnos.setAdapter(adaptadorAlumnos);
 
 
     }
