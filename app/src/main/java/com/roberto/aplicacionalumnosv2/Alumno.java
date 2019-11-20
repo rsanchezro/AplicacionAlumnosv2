@@ -1,6 +1,6 @@
 package com.roberto.aplicacionalumnosv2;
 
-class Alumno {
+public class Alumno {
 
     private int nummatricula;
     private String nombre;

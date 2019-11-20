@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Adaptador_alumnos extends RecyclerView.Adapter<Adaptador_alumnos.Miholder> {
@@ -70,6 +71,17 @@ public class Adaptador_alumnos extends RecyclerView.Adapter<Adaptador_alumnos.Mi
 
         //Retorno una instancia de miholder
         return new Miholder(v);
+    }
+
+    public void eliminar_elementos(ArrayList<Alumno> a)
+    {
+
+        for (Alumno elemento:a
+             ) {
+            datos.remove(elemento);
+        }
+        notifyDataSetChanged();
+
     }
 
     @Override

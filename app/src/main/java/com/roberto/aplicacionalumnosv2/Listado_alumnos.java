@@ -16,9 +16,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.roberto.aplicacionalumnosv2.viewmodel.AlumnoViewModel;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Listado_alumnos extends AppCompatActivity {
@@ -27,8 +33,10 @@ public class Listado_alumnos extends AppCompatActivity {
     //componente visual que representa la Lista de alumnos
     RecyclerView vista_listaalumnos;
     private Toolbar barra;
+    //Alumno viewmodel
+    AlumnoViewModel alumnos;
     //Lista de datos de los alumnos
-     ArrayList<Alumno> datos_listaalumnos;
+     //ArrayList<Alumno> datos_listaalumnos;
      ArrayList<Alumno> alumnosseleccionados=new ArrayList<>();
      //Adaptador que introduce los datos en la vista
     Adaptador_alumnos adaptadorAlumnos;
@@ -51,7 +59,7 @@ public class Listado_alumnos extends AppCompatActivity {
 
         Log.i("Informacion",barra.getTitle().toString());
         preparar_ReciclerView(curso);
-
+        Log.i("Informacion","Ya hemos preparado el recyclerview");
 
     }
 
@@ -59,7 +67,9 @@ public class Listado_alumnos extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.item_delete:
-                //
+                //borrar los elementos seleccionados
+                adaptadorAlumnos.eliminar_elementos(alumnosseleccionados);
+                salir_actionmode();
                 break;
             case R.id.item_edit:
                 //
@@ -78,7 +88,7 @@ public class Listado_alumnos extends AppCompatActivity {
         //Salir del modo action mode si estoy en el
         if(actionModeactivado)
         {
-            Log.i("Salir","Salir");
+
             salir_actionmode();
         }
         else
@@ -110,7 +120,12 @@ public class Listado_alumnos extends AppCompatActivity {
         vista_listaalumnos=(RecyclerView) findViewById(R.id.listaalumnos);
 
         TypedArray arrayalumnos=null;
-        datos_listaalumnos=new ArrayList<Alumno>();
+       // datos_listaalumnos=new ArrayList<Alumno>();
+
+        //Instancio el viewmodel
+        alumnos = ViewModelProviders.of(this).get(AlumnoViewModel.class);
+
+
 //AQUI CARGO LA LISTA DE ALUMNOS PARA ELLO AVERIGUO
 // QUE LISTA DE ALUMNOS DEBO CARGAR RECOGIENDO INFORMACIÓN DEL INTENT
         switch (curso)
@@ -129,12 +144,15 @@ public class Listado_alumnos extends AppCompatActivity {
         }
         if(arrayalumnos!=null)
         {
-            rellenarLista_alumnos(arrayalumnos);
+            if(alumnos.getLista_alumnos()==null) {
+                alumnos.setLista_alumnos(rellenarLista_alumnos(arrayalumnos));
+            }
         }
         vista_listaalumnos.setLayoutManager(new LinearLayoutManager(this));
         //Añadir divisor
+        vista_listaalumnos.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
 
-        adaptadorAlumnos= new Adaptador_alumnos(this,R.layout.alumno_layout,this.datos_listaalumnos);
+        adaptadorAlumnos= new Adaptador_alumnos(this,R.layout.alumno_layout,alumnos.getLista_alumnos());
 
         adaptadorAlumnos.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -177,6 +195,11 @@ public class Listado_alumnos extends AppCompatActivity {
                    seleccionar_Elemento(posicion);
                     adaptadorAlumnos.notifyItemChanged(posicion);
                     actualizar_barra();
+                    if(alumnosseleccionados.size()==0)
+                    {
+                        //Me salgo del action mode
+                        salir_actionmode();
+                    }
                 }
             }
         });
@@ -192,19 +215,20 @@ private void actualizar_barra()
 }
     private void seleccionar_Elemento(int posicion)
     {
-        if(alumnosseleccionados.contains(datos_listaalumnos.get(posicion)))
+        if(alumnosseleccionados.contains(alumnos.getLista_alumnos().get(posicion)))
         {
-            alumnosseleccionados.remove(datos_listaalumnos.get(posicion));
+            alumnosseleccionados.remove(alumnos.getLista_alumnos().get(posicion));
         }
         else
         {
-            alumnosseleccionados.add(datos_listaalumnos.get(posicion));
+            alumnosseleccionados.add(alumnos.getLista_alumnos().get(posicion));
         }
     }
 
 
-    private void rellenarLista_alumnos(TypedArray a)
+    private ArrayList<Alumno> rellenarLista_alumnos(TypedArray a)
     {
+        ArrayList<Alumno> l=new ArrayList<Alumno>();
         int id;
         for(int i=0;i<a.length();i++)
         {
@@ -213,9 +237,10 @@ private void actualizar_barra()
             {
                 TypedArray al=getResources().obtainTypedArray(id);
 
-                this.datos_listaalumnos.add(new Alumno(al.getInt(0,0),al.getString((int)1),al.getResourceId((int)2,R.drawable.ic_anonymous)));
+                l.add(new Alumno(al.getInt(0,0),al.getString((int)1),al.getResourceId((int)2,R.drawable.ic_anonymous)));
 
             }
         }
+        return l;
     }
 }
