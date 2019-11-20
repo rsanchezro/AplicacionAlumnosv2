@@ -12,6 +12,7 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +23,7 @@ public class Listado_alumnos extends AppCompatActivity {
 
     //componente visual que representa la Lista de alumnos
     RecyclerView vista_listaalumnos;
+    private Toolbar barra;
     //Lista de datos de los alumnos
      ArrayList<Alumno> datos_listaalumnos;
      ArrayList<Alumno> alumnosseleccionados=new ArrayList<>();
@@ -33,7 +35,15 @@ public class Listado_alumnos extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listado_alumnos);
-        preparar_ReciclerView();
+        barra=findViewById(R.id.toolbar);
+        String curso=getIntent().getStringExtra("curso");
+        barra.setTitle(new String("LISTADO ALUMNOS "+curso));
+        setSupportActionBar(barra);
+
+
+
+        Log.i("Informacion",barra.getTitle().toString());
+        preparar_ReciclerView(curso);
 
 
     }
@@ -41,7 +51,7 @@ public class Listado_alumnos extends AppCompatActivity {
 
 
 
-    private void preparar_ReciclerView() {
+    private void preparar_ReciclerView(String curso) {
 
         vista_listaalumnos=(RecyclerView) findViewById(R.id.listaalumnos);
 
@@ -49,10 +59,11 @@ public class Listado_alumnos extends AppCompatActivity {
         datos_listaalumnos=new ArrayList<Alumno>();
 //AQUI CARGO LA LISTA DE ALUMNOS PARA ELLO AVERIGUO
 // QUE LISTA DE ALUMNOS DEBO CARGAR RECOGIENDO INFORMACIÓN DEL INTENT
-        switch (getIntent().getStringExtra("curso"))
+        switch (curso)
         {
             case "GBD":
                 arrayalumnos=getResources().obtainTypedArray(R.array.array_datos_alumnos_GBD);
+
                 break;
             case "IAW":
                 //Asocio al recurso de alumnos de IAW
@@ -68,6 +79,17 @@ public class Listado_alumnos extends AppCompatActivity {
         }
         vista_listaalumnos.setLayoutManager(new LinearLayoutManager(this));
         adaptadorAlumnos= new Adaptador_alumnos(this,R.layout.alumno_layout,this.datos_listaalumnos);
+        adaptadorAlumnos.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                actionModeactivado=true;
+                //Inflo el menu
+                Menu m=null;
+                barra.inflateMenu(R.menu.menu_action_mode);
+
+                return true;
+            }
+        });
         adaptadorAlumnos.setOnClickListener(new View.OnClickListener(){
 
             @Override
