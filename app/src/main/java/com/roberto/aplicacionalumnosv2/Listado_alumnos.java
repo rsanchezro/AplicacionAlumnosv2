@@ -210,6 +210,7 @@ public class Listado_alumnos extends AppCompatActivity {
 
 private void actualizar_barra()
 {
+    Log.i("Informacion","prueba de commit");
     barra.getMenu().getItem(0).setVisible(alumnosseleccionados.size()>1?false:true);
     barra.setTitle(alumnosseleccionados.size()+" Alumnos seleccionados...");
 }
