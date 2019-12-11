@@ -168,7 +168,7 @@ public class Listado_alumnos extends AppCompatActivity {
                     barra.setTitleTextAppearance(Listado_alumnos.this,R.style.estiloActionpersonalizado);
 
                     //Seleccionar el elemento sobre el que se ha pulsado
-                    Log.i("informacion0","prueba");
+                 
                     seleccionar_Elemento(posicion);
                     //Actualizco el numero de elementos seleccionados
                     //Repinto el elemento
