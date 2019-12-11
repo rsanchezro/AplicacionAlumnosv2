@@ -163,6 +163,7 @@ public class Listado_alumnos extends AppCompatActivity {
                 {//Solo inflo el menu si no esta el actionmodeactivado
                     actionModeactivado = true;
                     barra.inflateMenu(R.menu.menu_action_mode);
+                    Log.i("informacion","otro commit");
                     //Cambio el estilo de la barra
                     barra.setBackgroundColor(Color.BLACK);
                     barra.setTitleTextAppearance(Listado_alumnos.this,R.style.estiloActionpersonalizado);
